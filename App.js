@@ -95,6 +95,7 @@ export default function App() {
       </View>
       <View style={styles.cardContainer}>
         <>
+          {/* Modal for controlling the devices */}
           <Modal visible={modalVisible} animationType="slide">
             <View
               style={{
@@ -136,7 +137,6 @@ export default function App() {
                 >
                   <Text style={styles.powerButtonText}>{powerButton}</Text>
                 </TouchableOpacity>
-
                 <View>
                   <Text
                     style={{
@@ -218,7 +218,6 @@ export default function App() {
                   <></>
                 )}
                 <PrimaryButtonG
-
                   width={170}
                   height={50}
                   title={"Back to devices"}
@@ -228,6 +227,7 @@ export default function App() {
             </View>
           </Modal>
         </>
+        {/*Card 1 */}
         <TouchableOpacity
           onPress={() => {
             OpenModal("Bulb");
@@ -241,7 +241,7 @@ export default function App() {
           <View style={styles.card1Shape2}></View>
           <View style={styles.card1Shape3}></View>
         </TouchableOpacity>
-
+        {/*Card 2 */}
         <TouchableOpacity
           onPress={() => {
             OpenModal("Fan");
@@ -256,12 +256,14 @@ export default function App() {
           <View style={styles.card2Shape5}></View>
           <View style={styles.card2Shape6}></View>
         </TouchableOpacity>
+        {/*Card 3 */}
         <TouchableOpacity style={styles.card}>
           <Text style={styles.card3Text}>Thermometer</Text>
           <View style={styles.card3Shape1}></View>
           <View style={styles.card3Shape2}></View>
           <View style={styles.card3Shape3}></View>
         </TouchableOpacity>
+        {/*Ip Validation Modal*/}
         <Modal
           transparent={true}
           animationType="slide"
@@ -300,7 +302,7 @@ export default function App() {
             )}
             <TextInput
               style={{
-                color:Background,
+                color: Background,
                 justifyContent: "center",
                 alignItems: "center",
                 display: "flex",
@@ -315,14 +317,14 @@ export default function App() {
               onChangeText={(text) => {
                 setIp(text);
                 ipInstance.CheckIP(ip);
-                
-                if (ipInstance.ip !==""&& ipInstance.status =="connected") {
+
+                if (ipInstance.ip !== "" && ipInstance.status == "connected") {
                   setValidation("true");
                   setTimeout(() => setIpModalVisible(false), 3000);
-                } else if( ipInstance.status ==="no connection") {
+                } else if (ipInstance.status === "no connection") {
                   setValidation("false");
+                } else {
                 }
-                else{}
               }}
             />
             <PrimaryButtonG
@@ -334,8 +336,8 @@ export default function App() {
               title={"Cancel"}
               pressHandler={() => {
                 setValidation("");
-                setIpModalVisible(false)
-                }}
+                setIpModalVisible(false);
+              }}
             />
           </KeyboardAvoidingView>
         </Modal>
