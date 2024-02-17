@@ -9,23 +9,29 @@ import {
 } from "react-native";
 import React, { useState } from "react";
 import { styles } from "./Styling/styles";
-import Bulb from "./devices/bulb";
-import Fan from "./devices/fan";
+import Device from "./devices/devices";
 import PrimaryButtonG from "./components/PrimaryButton";
 import IP from "./ip/IP";
+import axios from "axios";
 
 export default function App() {
   //Creating state for dark mode styling and modal visibility
   const [font, setFont] = useState("black");
   const [Background, setBackground] = useState("white");
   const [modalVisible, setModalVisible] = useState(false);
-  const [modalBackground, setModalBackground] = useState("white");
   const [ipmodalVisible, setIpModalVisible] = useState(false);
   const [validation, setValidation] = useState("");
+
+
+  //State for the value of the device
+  const [value, setValue] = useState(0);
 
   //State and Class instance for IP address of the backend server
   const [ip, setIp] = useState("");
   const ipInstance = new IP();
+
+  //State for the response message of the server
+  const [message, setMessage] = useState("");
 
   //State for the modal
   const [modaltitle, setModalTitle] = useState("");
@@ -36,9 +42,8 @@ export default function App() {
   const [powerButtonColor, setPowerButtonColor] = useState("green");
 
   //Instance of various device Classes
-  const bulb = new Bulb();
-  const fan = new Fan();
-
+  const device = new Device();
+  
   //Function to handle the power button
   const powerButtonHandler = () => {
     if (powerButton === "ON") {
@@ -66,6 +71,38 @@ export default function App() {
     setModalVisible(true);
     setModalTitle(deviceName);
   }
+
+  //Check whether the server is online
+  const  CheckIP = async () => {
+    /*
+     Checking whether flask server is online 
+     If flask server is online set the status to true
+    */
+   try {
+    const  response = await axios.get(`http://${ip}:5000/main`)
+    setMessage(response.data)
+   } catch (error) {
+      console.log(error.message)
+      setMessage("error")
+   }
+}
+
+  //Functions for Device speed or power value change
+  function Decrement() {
+    if (value - 1 < 0) {
+      setValue(0);
+    } else {
+      setValue(value - 1);
+    }
+  }
+
+  const Increment = () => {
+    if (value + 1 > 5) {
+      setValue(5);
+    } else {
+      setValue(value + 1);
+    }
+  };
 
   return (
     <View
@@ -118,12 +155,7 @@ export default function App() {
               <View style={styles.mainContainer}>
                 <TouchableOpacity
                   onPress={() => {
-                    powerButtonHandler();
-                    if (modaltitle === "Bulb") {
-                      bulb.toggle();
-                    } else {
-                      fan.toggle();
-                    }
+                   device.toggle()
                   }}
                   style={{
                     backgroundColor: powerButtonColor,
@@ -168,6 +200,11 @@ export default function App() {
                         marginBottom: 30,
                         zIndex: 4,
                       }}
+                      onPress={()=>{
+                        device.flash(3)
+                        Decrement()
+                        device.deviceToggleValue(value)
+                      }}
                     ></TouchableOpacity>
                     <TextInput
                       style={{
@@ -181,6 +218,7 @@ export default function App() {
                         marginBottom: 30,
                         zIndex: 4,
                       }}
+                      placeholder={`${value}`}
                     />
                     <TouchableOpacity
                       style={{
@@ -193,24 +231,15 @@ export default function App() {
                         marginBottom: 30,
                         zIndex: 4,
                       }}
-                    ></TouchableOpacity>
-                    <TouchableOpacity
-                      style={{
-                        position: "absolute",
-                        right: 60,
-                        top: -5,
-                        width: 30,
-                        height: 60,
-                        backgroundColor: font,
-                        borderRadius: 4,
-                        marginLeft: 50,
-                        marginBottom: 30,
-                        zIndex: 3,
+                      onPress={()=>{
+                        Increment()
+                        device.deviceToggleValue(value)
+                        device.deviceToggleValue(value)
                       }}
                     ></TouchableOpacity>
                   </View>
                 </View>
-                {modaltitle === "Bulb" ? (
+                {device === "Bulb" ? (
                   <>
                     <TextInput />
                   </>
@@ -227,10 +256,12 @@ export default function App() {
             </View>
           </Modal>
         </>
+        <Text>Ip:{ip}</Text>
         {/*Card 1 */}
         <TouchableOpacity
           onPress={() => {
             OpenModal("Bulb");
+            device.setDevice("bulb");
             setModalExtraControls("Brightness");
           }}
           style={styles.card}
@@ -246,6 +277,7 @@ export default function App() {
           onPress={() => {
             OpenModal("Fan");
             setModalExtraControls("Speed");
+            device.setDevice("fan");
           }}
           style={styles.card}
         >
@@ -275,8 +307,8 @@ export default function App() {
               borderColor: font,
               borderTopEndRadius: 10,
               borderTopStartRadius: 10,
-              marginTop: 100,
-              height: 600,
+              marginTop: 10,
+              height: 800,
               backgroundColor: Background,
               justifyContent: "center",
               alignItems: "center",
@@ -293,10 +325,10 @@ export default function App() {
             >
               Enter Ip address
             </Text>
-            {validation === "false" ? (
-              <Text style={{ color: "red" }}>Invalid IP</Text>
-            ) : validation === "true" ? (
+            {message === "connected" ? (
               <Text style={{ color: "green" }}>Connection established</Text>
+            ) : message === "error" ? (
+              <Text style={{ color: "red" }}>Invalid IP</Text>
             ) : (
               <></>
             )}
@@ -315,15 +347,11 @@ export default function App() {
                 padding: 10,
               }}
               onChangeText={(text) => {
+                device.setIP(text);
                 setIp(text);
-                ipInstance.CheckIP(ip);
-
-                if (ipInstance.ip !== "" && ipInstance.status == "connected") {
-                  setValidation("true");
+                CheckIP()
+                if ( message == "connected" ) {
                   setTimeout(() => setIpModalVisible(false), 3000);
-                } else if (ipInstance.status === "no connection") {
-                  setValidation("false");
-                } else {
                 }
               }}
             />
@@ -335,7 +363,6 @@ export default function App() {
               height={50}
               title={"Cancel"}
               pressHandler={() => {
-                setValidation("");
                 setIpModalVisible(false);
               }}
             />

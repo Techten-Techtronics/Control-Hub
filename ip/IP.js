@@ -1,26 +1,24 @@
 import axios from "axios";
 
-
 class IP {
     constructor() {
         this.ip = "";
         this.status = "unknown";
     }
-    async CheckIP(ip) {
-        try {
-            const response = await axios.get(`http://${ip}/`);
-            if (response.message === "Connection Successful!") {
-                this.ip = ip;
-                this.status = "connected";
-            }
-        }
-        catch (error) {
-            console.log(error.message);
-            if (error.message === "Network Error") {
-                this.status = "no connection";
-            }
-        }
-    }
+     //Function to check whether server is online
+ CheckIP = async (ip) => {
+    /*
+     Checking whether flask server is online 
+     If flask server is online set the status to true
+    */
+   try {
+    const  response = axios.get(`http://${ip}:5000/main`)
+    this.status = response.message
+   } catch (error) {
+      console.log(error.message)
+   }
 }
+}
+
 
 export default IP;
