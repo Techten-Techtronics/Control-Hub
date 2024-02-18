@@ -1,33 +1,54 @@
-import { useState,useContext,useEffect} from "react";
-import { ActivityIndicator,View, Image, StyleSheet} from "react-native";
+import { useState, useContext, useEffect } from "react";
+import { ActivityIndicator, View, Image, StyleSheet } from "react-native";
 import Home from "./Screens/homeScreen";
 import UrlContextProvider from "./store/url";
 import { UrlContext } from "./store/url";
 
 const AppLoading = () => {
   return (
-    <View style={styles.container}>
-      <ActivityIndicator size="large" color="blue" />
-      <Image source={require('./images/160174110.png')} style={styles.logo} />  
+    <View
+      style={{
+        alignItems: "center",
+        justifyContent: "center",
+        flex: 1,
+        flexDirection: "column",
+      }}
+    >
+      <View
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+          marginTop: -20,
+        }}
+      >
+        <ActivityIndicator size="large" color="blue" />
+      </View>
+      <View
+        style={{
+          position: "absolute",
+          bottom: 0,
+          marginBottom: 20,
+          height: "auto",
+        }}
+      >
+        <Image source={require("./images/160174110.png")} style={styles.logo} />
+      </View>
     </View>
   );
-}
+};
 
-
- function Main() {
-
+function Main() {
   //URL context
-  const context= useContext(UrlContext);
+  const context = useContext(UrlContext);
 
-  const [appLoading, setAppLoading] = useState(true); 
+  const [appLoading, setAppLoading] = useState(true);
 
   //Get url from the URL server
   async function getURL() {
-    fetch(
-      `https://urlserver-wsdc.onrender.com/url`
-    )
+    fetch(`https://urlserver-wsdc.onrender.com/url`)
       .then((response) => {
-        return response.json()
+        return response.json();
       })
       .then((data) => {
         context.setURL(data.Url);
@@ -40,10 +61,9 @@ const AppLoading = () => {
       .catch((error) => {
         console.error(error.message);
         setAppLoading(false);
-     
       });
   }
-  
+
   useEffect(() => {
     getURL();
     setTimeout(() => {
@@ -51,22 +71,14 @@ const AppLoading = () => {
     }, 4000);
   }, []);
 
-
-  return (
-   <>
-    {
-      appLoading ? <AppLoading /> : <Home />
-    }
-   </>
-  );
+  return <>{appLoading ? <AppLoading /> : <Home />}</>;
 }
-
 
 export default function App() {
   return (
-  <UrlContextProvider>
-    <Main />
-  </UrlContextProvider>
+    <UrlContextProvider>
+      <Main />
+    </UrlContextProvider>
   );
 }
 
