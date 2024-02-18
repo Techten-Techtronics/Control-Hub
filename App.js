@@ -3,6 +3,8 @@ import { ActivityIndicator, View, Image, StyleSheet } from "react-native";
 import Home from "./Screens/homeScreen";
 import UrlContextProvider from "./store/url";
 import { UrlContext } from "./store/url";
+import LandingPage from "./Screens/startingScreen";
+import Route from "./navigation/pageRoute";
 
 const AppLoading = () => {
   return (
@@ -19,7 +21,7 @@ const AppLoading = () => {
           flex: 1,
           justifyContent: "center",
           alignItems: "center",
-          marginTop: -20,
+         
         }}
       >
         <ActivityIndicator size="large" color="blue" />
@@ -71,7 +73,7 @@ function Main() {
     }, 4000);
   }, []);
 
-  return <>{appLoading ? <AppLoading /> : <Home />}</>;
+  return <>{appLoading ? <AppLoading /> : <Route />}</>;
 }
 
 export default function App() {
@@ -90,7 +92,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   logo: {
-    width: 200,
-    height: 200,
+    width: 110,
+    height: 90,
   },
 });
