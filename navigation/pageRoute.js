@@ -9,6 +9,7 @@ import LandingPage from "../Screens/startingScreen";
 
 
 function Route() {
+    const Stack = createNativeStackNavigator();
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Home">
