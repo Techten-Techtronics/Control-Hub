@@ -1,9 +1,9 @@
-import { useEffect,useState } from "react";
+import { useEffect, useState } from "react";
 import Device from "../devices/devices";
-import { View,Modal,Text,TouchableOpacity, TextInput } from "react-native";
+import { View, Modal, Text, TouchableOpacity, TextInput } from "react-native";
 import { styles } from "../Styling/styles";
 import PrimaryButtonG from "../components/PrimaryButton";
-
+import { AntDesign } from "@expo/vector-icons";
 
 /*
 Props to be recieved
@@ -16,23 +16,19 @@ modalVisibilityHanlder - Modal Visibility
 modalVisible - Property for modal visibility
 */
 
-
-
 export default function DeviceControlModal(props) {
-
   //State for the value of the device
   const [value, setValue] = useState(0);
 
   //State for power button
   const [powerButton, setPowerButton] = useState("ON");
   const [powerButtonColor, setPowerButtonColor] = useState("green");
-  
-   
-  //Instance of device Classes
-  const deviceObject = new Device
 
-   //Function to handle the power button
-   const powerButtonHandler = () => {
+  //Instance of device Classes
+  const deviceObject = new Device();
+
+  //Function to handle the power button
+  const powerButtonHandler = () => {
     if (powerButton === "ON") {
       setPowerButton("OFF");
       setPowerButtonColor("red");
@@ -41,7 +37,7 @@ export default function DeviceControlModal(props) {
       setPowerButtonColor("green");
     }
   };
-  
+
   //Functions for Device speed or power value change
   function Decrement() {
     if (value - 1 < 0) {
@@ -59,134 +55,144 @@ export default function DeviceControlModal(props) {
     }
   };
 
-  useEffect(()=>{
-    deviceObject.setDevice(props.device)
-    deviceObject.setUrl(props.url)
-  },[])
-    return (
-        <Modal visible={props.modalVisible} animationType="slide">
-        <View
+  useEffect(() => {
+    deviceObject.setDevice(props.device);
+    deviceObject.setUrl(props.url);
+  }, []);
+  return (
+    <Modal visible={props.modalVisible} animationType="slide">
+      <View
+        style={{
+          paddingTop: 50,
+          flex: 1,
+          backgroundColor: props.Background,
+        }}
+      >
+        <Text
           style={{
-            paddingTop: 50,
-            flex: 1,
-            backgroundColor: props.Background,
+            color: props.font,
+            fontSize: 30,
+            fontWeight: "bold",
+            marginTop: 40,
+            marginLeft: 20,
           }}
         >
-          <Text
+          {props.modalTitle}
+        </Text>
+        <View style={styles.mainContainer}>
+          <TouchableOpacity
+            onPress={() => {
+              powerButtonHandler();
+              deviceObject.toggle();
+            }}
             style={{
-              color: props.font,
-              fontSize: 30,
-              fontWeight: "bold",
-              marginTop: 40,
-              marginLeft: 20,
+              backgroundColor: powerButtonColor,
+              width: 120,
+              height: 120,
+              borderRadius: 60,
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
             }}
           >
-            {props.modalTitle}
-          </Text>
-          <View style={styles.mainContainer}>
-            <TouchableOpacity
-              onPress={() => {
-               powerButtonHandler()
-               deviceObject.toggle()
-              }}
+            <Text style={styles.powerButtonText}>{powerButton}</Text>
+          </TouchableOpacity>
+          <View>
+            <Text
               style={{
-                backgroundColor: powerButtonColor,
-                width: 120,
-                height: 120,
-                borderRadius: 60,
+                color: props.font,
+                marginTop: 60,
+                fontSize: 20,
+                fontWeight: "bold",
+                marginLeft: 20,
+                marginBottom: 30,
+              }}
+            >
+              {props.modalExtraControl}
+            </Text>
+            <View
+              style={{
                 display: "flex",
+                flexDirection: "row",
                 justifyContent: "center",
                 alignItems: "center",
               }}
             >
-              <Text style={styles.powerButtonText}>{powerButton}</Text>
-            </TouchableOpacity>
-            <View>
-              <Text
+              <TouchableOpacity
                 style={{
-                  color: props.font,
-                  marginTop: 60,
-                  fontSize: 20,
-                  fontWeight: "bold",
-                  marginLeft: 20,
-                  marginBottom: 30,
+                  width: 60,
+                  height: 60,
+                  marginRight: 10,
+                  zIndex: 4,
+                  marginBottom: 15,
+                }}
+                onPress={() => {
+                  deviceObject.flash(3);
+                  Decrement();
+                  deviceObject.deviceToggleValue(value);
                 }}
               >
-                {props.modalExtraControl}
-              </Text>
+                <AntDesign name="minuscircleo" size={50} color={props.font} />
+              </TouchableOpacity>
               <View
                 style={{
-                  display: "flex",
-                  flexDirection: "row",
+                  width: 100,
+                  height: 50,
                   justifyContent: "center",
+                  display: "flex",
                   alignItems: "center",
+
+                  borderBottomWidth: 2,
+                  borderRadius: 5,
+                  marginHorizontal: 20,
+                  marginBottom: 10,
+                  borderColor: props.font,
+                  zIndex: 4,
                 }}
               >
-                <TouchableOpacity
+                <Text
                   style={{
-                    width: 60,
-                    height: 30,
-                    backgroundColor: props.font,
-                    borderRadius: 4,
-                    marginLeft: 50,
-                    marginBottom: 30,
-                    zIndex: 4,
-                  }}
-                  onPress={()=>{
-                    deviceObject.flash(3)
-                    Decrement()
-                    deviceObject.deviceToggleValue(value)
-                  }}
-                ></TouchableOpacity>
-                <View
-                  style={{
-                    width: 70,
-                    padding: 10,
-                    height: 50,
-                    borderWidth: 2,
-                    backgroundColor: "white",
-                    borderRadius: 2,
-                    marginLeft: 50,
-                    marginBottom: 30,
-                    zIndex: 4,
-                  }}
-                ><Text>{value}</Text></View>
-                <TouchableOpacity
-                  style={{
-                    marginRight: 46,
-                    width: 60,
-                    height: 30,
-                    backgroundColor: props.font,
-                    borderRadius: 10,
-                    marginLeft: 50,
-                    marginBottom: 30,
-                    zIndex: 4,
-                  }}
-                  onPress={()=>{
-                    Increment()
-                    deviceObject.deviceToggleValue(value)
-                    deviceObject.deviceToggleValue(value)
+                    color: props.font,
+                    fontSize: 18
                   }}
                 >
-                {/*An image or icon will be placed here*/}
-                </TouchableOpacity>
+                  {value}
+                </Text>
               </View>
+              <TouchableOpacity
+                style={{
+                  width: 60,
+                  height: 60,
+                  marginLeft: 15,
+                  zIndex: 4,
+                  marginBottom: 15,
+                }}
+                onPress={() => {
+                  Increment();
+                  deviceObject.deviceToggleValue(value);
+                  deviceObject.deviceToggleValue(value);
+                }}
+              >
+                {/*An image or icon will be placed here*/}
+                <AntDesign name="pluscircleo" size={50} color={props.font} />
+              </TouchableOpacity>
             </View>
-            {props.device === "Bulb" ? (
-              <>
-                <TextInput />
-              </>
-            ) : (
-              <></>
-            )}
-            <PrimaryButtonG
-              width={170}
-              height={50}
-              title={"Back to devices"}
-              pressHandler={props.modalVisibilityHandler}
-            />
           </View>
+          {props.device === "Bulb" ? (
+            <>
+              <TextInput />
+            </>
+          ) : (
+            <></>
+          )}
+          <PrimaryButtonG
+            width={170}
+            height={50}
+            title={"Back to devices"}
+            pressHandler={props.modalVisibilityHandler}
+          />
         </View>
-      </Modal>
-    )
+      </View>
+    </Modal>
+  );
 }
