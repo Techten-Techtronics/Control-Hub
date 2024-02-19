@@ -22,7 +22,7 @@ export const styles = StyleSheet.create({
       alignItems: "center",
       fontSize: 20,
       fontWeight: "bold",
-      backgroundColor: "#0066FF",
+      backgroundColor: "#0000ff",
       width: 310,
       height: 160,
       borderRadius: 40,
@@ -34,6 +34,7 @@ export const styles = StyleSheet.create({
       fontSize: 20,
       fontWeight: "bold",
       marginBottom: 30,
+      marginRight: 30
     },
     mainContainer: {
       display: "flex",
@@ -81,7 +82,7 @@ export const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "bold",
     marginBottom: 30,
-    marginRight: 187,
+    marginRight: 40,
   },
   card2Shape2:{
     position: "absolute",
@@ -130,7 +131,7 @@ export const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "bold",
     marginBottom: 30,
-    marginRight: 110,
+    // marginRight: 10,
   },
   card3Shape1: {
     position: "absolute",
