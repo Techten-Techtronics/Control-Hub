@@ -1,25 +1,35 @@
-
+//Device Class
 class Device {
     constructor() {
       this.url =""
       this.Device = "";
       this.isOn == false;
     }
-
+    
     setUrl(url) {
       this.url = url
     }
 
-    getUrl(url) {
+    getUrl() {
       return this.url
+    }
+
+    setDevice(device) {
+      this.Device = device;
+    }
+    
+    getDevice() {
+      return this.Device;
     }
   
     async deviceToggleValue(value) {
+      console.log(this.Device)
       switch (this.Device) {
-        case "fan":
+        case "Fan":
+          console.log(value)
           this.setSpeed(value);
           break;
-        case "bulb":
+        case "Bulb":
           this.setBrightness(value);
           break;
         default:
@@ -29,11 +39,12 @@ class Device {
   
     async deviceToggle() {
       switch (this.Device) {
-        case "fan":
-          this.setSpeed();
+        case "Fan":
+          console.log("Fan is being toggled")
+          this.setSpeed(0);
           break;
-        case "bulb":
-          this.bulbToggle();
+        case "Bulb":
+          this.bulbToggle(0);
           break;
         default:
           break;
@@ -42,20 +53,19 @@ class Device {
   
   
   
-    // This function is used. to set the speed of the stepper motor
+    // This function is used. to set the speed of the fan
     async setSpeed(level) {
-      fetch(this.url+'/steppermotor`', {
+      console.log(this.url)
+      fetch('http://'+this.url+':4000/dcmotor', {
         method: 'POST', // *GET, POST, PUT, DELETE, etc.
         headers: {
+          'Accept': 'application/json',
           'Content-Type': 'application/json'
           // 'Content-Type': 'application/x-www-form-urlencoded',
         },
-        body: {
+        body:JSON.stringify( {
           speedLevel:level
-        } // body data type must match "Content-Type" header
-      })
-      .then(()=>{
-        this.isOn = true
+        }) // body data type must match "Content-Type" header
       })
       .catch((error)=>{
         console.log(error.message)
@@ -133,13 +143,7 @@ class Device {
       });
     }
   
-    setDevice(device) {
-      this.Device = device;
-    }
-    
-    getDevice() {
-      return this.Device;
-    }
+
   }
   export default Device;
   

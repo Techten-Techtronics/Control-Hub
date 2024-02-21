@@ -56,9 +56,11 @@ export default function DeviceControlModal(props) {
   };
 
   useEffect(() => {
+    console.log(props.device)
     deviceObject.setDevice(props.device);
     deviceObject.setUrl(props.url);
-  }, []);
+  },[]);
+
   return (
     <Modal visible={props.modalVisible} animationType="slide">
       <View
@@ -68,6 +70,11 @@ export default function DeviceControlModal(props) {
           backgroundColor: props.Background,
         }}
       >
+      <View style={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-around",
+      }}>
         <Text
           style={{
             color: props.font,
@@ -79,11 +86,24 @@ export default function DeviceControlModal(props) {
         >
           {props.modalTitle}
         </Text>
+        <TextInput
+        style={{ 
+          borderWidth: 1,
+          width: 200,
+          height: 50,
+          paddingHorizontal: 10,
+        }}
+        placeholder="Enter IP Address"
+        onChangeText={(text) => {deviceObject.setUrl(text);}}
+         />
+        </View>
         <View style={styles.mainContainer}>
           <TouchableOpacity
             onPress={() => {
+              deviceObject.setDevice(props.device);
+              deviceObject.setUrl(props.url);
               powerButtonHandler();
-              deviceObject.toggle();
+              deviceObject.deviceToggle();
             }}
             style={{
               backgroundColor: powerButtonColor,
@@ -127,7 +147,8 @@ export default function DeviceControlModal(props) {
                   marginBottom: 15,
                 }}
                 onPress={() => {
-                  deviceObject.flash(3);
+                  deviceObject.setDevice(props.device);
+                  deviceObject.setUrl(props.url);
                   Decrement();
                   deviceObject.deviceToggleValue(value);
                 }}
@@ -168,8 +189,10 @@ export default function DeviceControlModal(props) {
                   marginBottom: 15,
                 }}
                 onPress={() => {
+                  console.log("Increment");
+                  deviceObject.setDevice(props.device);
+                  deviceObject.setUrl(props.url);
                   Increment();
-                  deviceObject.deviceToggleValue(value);
                   deviceObject.deviceToggleValue(value);
                 }}
               >

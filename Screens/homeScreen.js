@@ -63,7 +63,8 @@ export default function Home() {
        If flask server is online set the status to true
   
       */
-    fetch(context.url)
+     console.log(context.url);
+    fetch(`http://${context.url}:4000/`)
       .then((response) => {
         response.json();
       })
@@ -78,9 +79,11 @@ export default function Home() {
 
   //Constantly check whether server is online
   useEffect(() => {
-    setInterval(() => {
+    var interval =   setInterval(() => {
       CheckIP();
     }, 3000);
+    setTimeout(()=>{clearInterval(interval)},12000)
+  
   }, []);
 
   return (
@@ -106,7 +109,7 @@ export default function Home() {
               fontWeight: "bold",
             }}
           >
-            Control hub
+          Smart Home
           </Text>
           <PrimaryButtonG
             width={120}
@@ -131,14 +134,14 @@ export default function Home() {
           {/*Card 1 */}
           <TouchableOpacity
             onPress={() => {
+              setDevice("Led");
               OpenModal();
-              setDevice("Bulb");
               setModalExtraControls("Brightness");
             }}
             style={styles.card}
             activeOpacity={0.6}
           >
-            <Text style={styles.cardText}>Bulb</Text>
+            <Text style={styles.cardText}>Led</Text>
             <Image
               source={Bulb}
               style={{
@@ -167,7 +170,7 @@ export default function Home() {
           </TouchableOpacity>
           {/*Card 3 */}
           <TouchableOpacity style={styles.card}>
-            <Text style={styles.card3Text}>Thermometer</Text>
+            <Text style={styles.card3Text}>Smart Pump</Text>
             <Image
               source={Thermo}
               style={{
