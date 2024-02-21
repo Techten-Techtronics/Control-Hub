@@ -1,6 +1,13 @@
 import { useEffect, useState } from "react";
 import Device from "../devices/devices";
-import { View, Modal, Text, TouchableOpacity, TextInput } from "react-native";
+import {
+  View,
+  StyleSheet,
+  Modal,
+  Text,
+  TouchableOpacity,
+  TextInput,
+} from "react-native";
 import { styles } from "../Styling/styles";
 import PrimaryButtonG from "../components/PrimaryButton";
 import { AntDesign } from "@expo/vector-icons";
@@ -27,10 +34,14 @@ export default function DeviceControlModal(props) {
   //Instance of device Classes
   const deviceObject = new Device();
 
+  //State for device
+  const [device, setDevice] = useState("");
+
   //Function to handle the power button
   const powerButtonHandler = () => {
     if (powerButton === "ON") {
       setPowerButton("OFF");
+      setValue(0);
       setPowerButtonColor("red");
     } else {
       setPowerButton("ON");
@@ -56,10 +67,11 @@ export default function DeviceControlModal(props) {
   };
 
   useEffect(() => {
-    console.log(props.device)
+    console.log(props.device);
     deviceObject.setDevice(props.device);
     deviceObject.setUrl(props.url);
-  },[]);
+    setDevice(props.device);
+  }, []);
 
   return (
     <Modal visible={props.modalVisible} animationType="slide">
@@ -70,32 +82,36 @@ export default function DeviceControlModal(props) {
           backgroundColor: props.Background,
         }}
       >
-      <View style={{
-          display: "flex",
-          flexDirection: "row",
-          justifyContent: "space-around",
-      }}>
-        <Text
+        <View
           style={{
-            color: props.font,
-            fontSize: 30,
-            fontWeight: "bold",
-            marginTop: 40,
-            marginLeft: 20,
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-around",
           }}
         >
-          {props.modalTitle}
-        </Text>
-        <TextInput
-        style={{ 
-          borderWidth: 1,
-          width: 200,
-          height: 50,
-          paddingHorizontal: 10,
-        }}
-        placeholder="Enter IP Address"
-        onChangeText={(text) => {deviceObject.setUrl(text);}}
-         />
+          <Text
+            style={{
+              color: props.font,
+              fontSize: 30,
+              fontWeight: "bold",
+              marginTop: 40,
+              marginLeft: 20,
+            }}
+          >
+            {props.modalTitle}
+          </Text>
+          <TextInput
+            style={{
+              borderWidth: 1,
+              width: 200,
+              height: 50,
+              paddingHorizontal: 10,
+            }}
+            placeholder="Enter IP Address"
+            onChangeText={(text) => {
+              deviceObject.setUrl(text);
+            }}
+          />
         </View>
         <View style={styles.mainContainer}>
           <TouchableOpacity
@@ -174,7 +190,7 @@ export default function DeviceControlModal(props) {
                 <Text
                   style={{
                     color: props.font,
-                    fontSize: 18
+                    fontSize: 18,
                   }}
                 >
                   {value}
@@ -201,9 +217,71 @@ export default function DeviceControlModal(props) {
               </TouchableOpacity>
             </View>
           </View>
-          {props.device === "Bulb" ? (
+          
+
+          {device === "Bulb" ? (
             <>
               <TextInput />
+            </>
+          ) : device === "Fan" ? (
+            <>
+              <View style={style.deviceControlView}>
+                <PrimaryButtonG
+                  pressHandler={() => {
+                    setValue(1)
+                    deviceObject.setDevice(props.device);
+                    deviceObject.setUrl(props.url);
+                    deviceObject.deviceToggleValue(1);
+                  }}
+                  title={"1"}
+                  height={50}
+                  width={50}
+                />
+                <PrimaryButtonG
+                  pressHandler={() => {
+                    setValue(2)
+                    deviceObject.setDevice(props.device);
+                    deviceObject.setUrl(props.url);
+                    deviceObject.deviceToggleValue(2);
+                  }}
+                  title={"2"}
+                  height={50}
+                  width={50}
+                />
+                <PrimaryButtonG
+                  pressHandler={() => {
+                    setValue(3)
+                    deviceObject.setDevice(props.device);
+                    deviceObject.setUrl(props.url);
+                    deviceObject.deviceToggleValue(3);
+                  }}
+                  title={"3"}
+                  height={50}
+                  width={50}
+                />
+                <PrimaryButtonG
+                  pressHandler={() => {
+                    setValue(4)
+                    deviceObject.setDevice(props.device);
+                    deviceObject.setUrl(props.url);
+                    deviceObject.deviceToggleValue(4);
+                  }}
+                  title={"4"}
+                  height={50}
+                  width={50}
+                />
+                <PrimaryButtonG
+                  pressHandler={() => {
+                    setValue(5)
+                    deviceObject.setDevice(props.device);
+                    deviceObject.setUrl(props.url);
+                    deviceObject.deviceToggleValue(5);
+                  }}
+                  title={"5"}
+                  height={50}
+                  width={50}
+                />
+              </View>
             </>
           ) : (
             <></>
@@ -219,3 +297,12 @@ export default function DeviceControlModal(props) {
     </Modal>
   );
 }
+
+const style = StyleSheet.create({
+  deviceControlView: {
+    display: "flex",
+    flexDirection: "row",
+    gap: 10,
+    marginBottom: 20,
+  },
+});
