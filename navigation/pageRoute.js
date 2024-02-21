@@ -6,14 +6,10 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Home from "../Screens/homeScreen";
 import LandingPage from "../Screens/startingScreen";
 
-
-
 function Route() {
 
+  const Stack = createNativeStackNavigator();
   
-
-
-    const Stack = createNativeStackNavigator();
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Welcome">

@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 // smart home svg
-import SmartH from "../assets/SmartH.png";
+import SmartH from "../assets/Smarthome.gif";
 //hand wave
 import HandWave from "../assets/wave.png";
 //logo
